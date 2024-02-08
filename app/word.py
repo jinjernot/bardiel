@@ -1,5 +1,5 @@
 from openpyxl import load_workbook
-from docx.shared import Inches
+from docx.shared import Inches, Pt
 from docx import Document
 import pandas as pd
 
@@ -21,12 +21,22 @@ def excel_to_word(excel_file, word_file):
     # Add the DataFrame as a table to the Word document
     table = doc.add_table(rows=df.shape[0], cols=df.shape[1])
 
-                
     # Iterate through DataFrame columns and values
     for i, column in enumerate(df.columns):
         for j in range(df.shape[0]):
             value = df.iloc[j, i]
-            doc.tables[-1].cell(j, i).text = str(value)
+            cell = table.cell(j, i)
+            cell.text = str(value)
+            # Set font size for each cell in the table
+            for paragraph in cell.paragraphs:
+                for run in paragraph.runs:
+                    run.font.size = Pt(5)  # Set font size to 5 points
+
+    # Set table width to match entire page width
+    table.autofit = False
+    section = doc.sections[-1]
+    table_width = section.page_width - section.left_margin - section.right_margin
+    table.width = table_width
 
     # Set margins
     sections = doc.sections
