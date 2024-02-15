@@ -57,4 +57,4 @@ def create_sheet(xlsx_file):
 
     # Convert Excel to Word
     word_file = 'data.docx'
-    excel_to_word(excel_file, word_file)
+    excel_to_word(df, word_file)

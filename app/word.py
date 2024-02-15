@@ -1,36 +1,30 @@
-from openpyxl import load_workbook
-from docx.shared import Inches, Pt
 from docx import Document
 import pandas as pd
+from app.table import table_column_widths
+from docx.shared import Pt, RGBColor, Inches
+from docx.oxml import parse_xml
+from docx.oxml.ns import nsdecls
 
-def excel_to_word(excel_file, word_file):
-    # Load Excel workbook
-    book = load_workbook(excel_file)
-
+def excel_to_word(df, word_file):
     # Create a Word document
     doc = Document()
 
-    # Get the active sheet from the Excel workbook
-    sheet = book.active
-
-    # Get the data from the Excel sheet
-    data = sheet.values
-    columns = next(data)
-    df = pd.DataFrame(data, columns=columns)
-
     # Add the DataFrame as a table to the Word document
-    table = doc.add_table(rows=df.shape[0], cols=df.shape[1])
+    table = doc.add_table(rows=df.shape[0] + 1, cols=df.shape[1])
+
+    table_column_widths(table, (Inches(2), Inches(5.5),))
 
     # Iterate through DataFrame columns and values
     for i, column in enumerate(df.columns):
+        table.cell(0, i).text = column  # Set column headers
         for j in range(df.shape[0]):
             value = df.iloc[j, i]
-            cell = table.cell(j, i)
+            cell = table.cell(j + 1, i)
             cell.text = str(value)
             # Set font size for each cell in the table
             for paragraph in cell.paragraphs:
                 for run in paragraph.runs:
-                    run.font.size = Pt(5)  # Set font size to 5 points
+                    run.font.size = Pt(6)  # Set font size to 5 points
 
     # Set table width to match entire page width
     table.autofit = False
@@ -45,9 +39,6 @@ def excel_to_word(excel_file, word_file):
         section.right_margin = Inches(0.5)  # Set right margin to 0.5 inches
         section.top_margin = Inches(0.5)  # Set top margin to 0.5 inches
         section.bottom_margin = Inches(0.5)  # Set bottom margin to 0.5 inches
-
-    # Add a page break between sheets
-    doc.add_page_break()
 
     # Save the Word document
     doc.save(word_file)
