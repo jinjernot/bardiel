@@ -24,7 +24,20 @@ def excel_to_word(df, word_file):
             # Set font size for each cell in the table
             for paragraph in cell.paragraphs:
                 for run in paragraph.runs:
-                    run.font.size = Pt(6)  # Set font size to 5 points
+                    run.font.size = Pt(6)  # Set font size to 6 points
+            # Reduce spacing within cell
+            cell.paragraphs[0].paragraph_format.space_before = Pt(0)
+            cell.paragraphs[0].paragraph_format.space_after = Pt(0)
+
+
+    # Set font size and spacing for table header
+    for cell in table.rows[0].cells:
+        for paragraph in cell.paragraphs:
+            for run in paragraph.runs:
+                run.font.size = Pt(6)  # Set font size to 6 points
+        # Add spacing to table header
+        cell.paragraphs[0].paragraph_format.space_before = Pt(6)
+        cell.paragraphs[0].paragraph_format.space_after = Pt(6)
 
     # Set table width to match entire page width
     table.autofit = False
