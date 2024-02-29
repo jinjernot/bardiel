@@ -23,7 +23,9 @@ def create_sheet(xlsx_file):
     df = df[~df["Container Group"].str.contains('|'.join(unwanted_strings), na=False)]
 
     df_skus = df.copy()
-    
+
+    # Remove rows where the content is the same for all columns in that row 
+    df_skus = df_skus[df_skus.iloc[:, 7:].nunique(axis=1) > 1]
 
     # Extracting values from "Container Name" column
     container_name_values = df_skus["Container Name"].values
@@ -44,11 +46,6 @@ def create_sheet(xlsx_file):
     # Remove rows with "nan" values
     new_df = new_df[~new_df.isin(['nan']).any(axis=1)]
 
-    # Printing the new DataFrame
-
-
-    print(new_df)
-
     # Keep only "Container Name" and "Series Value" columns
     df = df[["Container Name", "Series Value"]]
 
@@ -59,8 +56,7 @@ def create_sheet(xlsx_file):
     # Save Excel file
     excel_file = 'data.xlsx'
     df.to_excel(excel_file, index=False)
-    new_df = new_df.to_excel("skus.xlsx", index=False)
-
+    new_df.to_excel("skus.xlsx", index=False)
     # Convert Excel to Word
     word_file = 'data.docx'
-    excel_to_word(df, word_file)
+    excel_to_word(df, new_df, word_file)
