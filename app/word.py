@@ -1,7 +1,7 @@
 from docx import Document
-import pandas as pd
 from app.table import table_column_widths
 from docx.shared import Pt, Inches
+from docx.enum.text import WD_BREAK
 
 
 def excel_to_word(df, new_df, word_file):
@@ -37,6 +37,8 @@ def excel_to_word(df, new_df, word_file):
         cell.paragraphs[0].paragraph_format.space_before = Pt(6)
         cell.paragraphs[0].paragraph_format.space_after = Pt(6)
 
+
+    doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
     # Set table width to match entire page width
     table.autofit = False
     section = doc.sections[-1]
