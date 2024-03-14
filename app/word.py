@@ -5,13 +5,19 @@ from docx.enum.text import WD_BREAK
 
 
 def excel_to_word(df, new_df, word_file):
+
     # Create a Word document
     doc = Document()
+
+    paragraph = doc.add_paragraph()
+    run = paragraph.add_run("Series")
+    run.font.size = Pt(12)
+    run.bold = True
 
     # Add the DataFrame 'df' as a table to the Word document
     table = doc.add_table(rows=df.shape[0] + 1, cols=df.shape[1])
     table_column_widths(table, (Inches(2), Inches(5.5),))
-
+    
     # Populate the table with 'df' data
     for i, column in enumerate(df.columns):
         table.cell(0, i).text = column  # Set column headers
@@ -45,6 +51,13 @@ def excel_to_word(df, new_df, word_file):
     table_width = section.page_width - section.left_margin - section.right_margin
     table.width = table_width
 
+    paragraph = doc.add_paragraph()
+    run = paragraph.add_run("SKUs")
+    run.font.size = Pt(12)
+    run.bold = True
+
+    # Counter for tables added
+    tables_added = 0
     for i in range(1, new_df.shape[1]):
         # Add a paragraph break between tables
         doc.add_paragraph()
@@ -87,6 +100,13 @@ def excel_to_word(df, new_df, word_file):
         table.autofit = False
         table.width = table_width
 
+        # Increment tables_added counter
+        tables_added += 1
+
+        # Insert a page break after every third table
+        if tables_added % 4 == 0:
+            doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
+
     # Set margins
     sections = doc.sections
     for section in sections:
@@ -95,5 +115,13 @@ def excel_to_word(df, new_df, word_file):
         section.top_margin = Inches(0.5)  # Set top margin to 0.5 inches
         section.bottom_margin = Inches(0.5)  # Set bottom margin to 0.5 inches
 
+    paragraph = doc.add_paragraph()
+    run = paragraph.add_run()
+    run.add_break(WD_BREAK.LINE)
+    run = paragraph.add_run("Aqui va a el footnote, pongo muchas lineas \n asdsdadasdasdasdadasdasasdadadsadasd\n sdffweewwolililioilioioilo \n")
+    run.font.size = Pt(8)
+    run.bold = True
+
     # Save the Word document
     doc.save(word_file)
+
