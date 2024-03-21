@@ -60,7 +60,7 @@ def excel_to_word(df, new_df, word_file):
     tables_added = 0
     for i in range(1, new_df.shape[1]):
         # Add a paragraph break between tables
-        doc.add_paragraph()
+        #doc.add_paragraph()
 
         # Add a new table for the current column
         table = doc.add_table(rows=new_df.shape[0] + 1, cols=2)
