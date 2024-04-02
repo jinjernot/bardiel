@@ -15,7 +15,7 @@ def excel_to_word(df, new_df, word_file):
     run.bold = True
 
     # Add the DataFrame 'df' as a table to the Word document
-    table = doc.add_table(rows=df.shape[0] + 1, cols=df.shape[1])
+    table = doc.add_table(rows=df.shape[0] + 1, cols=df.shape[1], style='Table Grid')
     table_column_widths(table, (Inches(2), Inches(5.5),))
     
     # Populate the table with 'df' data
@@ -63,7 +63,7 @@ def excel_to_word(df, new_df, word_file):
         #doc.add_paragraph()
 
         # Add a new table for the current column
-        table = doc.add_table(rows=new_df.shape[0] + 1, cols=2)
+        table = doc.add_table(rows=new_df.shape[0] + 1, cols=2,  style='Table Grid')
         table_column_widths(table, (Inches(1.5), Inches(6),))
 
         # Populate the table with the values from the first and current column
@@ -90,7 +90,7 @@ def excel_to_word(df, new_df, word_file):
         for cell in table.rows[0].cells:
             for paragraph in cell.paragraphs:
                 for run in paragraph.runs:
-                    run.font.size = Pt(6)  # Set font size to 6 points
+                    run.font.size = Pt(8)  # Set font size to 6 points
                     run.font.bold = True
             # Add spacing to table header
             cell.paragraphs[0].paragraph_format.space_before = Pt(6)
@@ -102,6 +102,9 @@ def excel_to_word(df, new_df, word_file):
 
         # Increment tables_added counter
         tables_added += 1
+
+        # Insert a line break after each table
+        doc.add_paragraph()
 
         # Insert a page break after every third table
         if tables_added % 4 == 0:
@@ -118,7 +121,7 @@ def excel_to_word(df, new_df, word_file):
     paragraph = doc.add_paragraph()
     run = paragraph.add_run()
     run.add_break(WD_BREAK.LINE)
-    run = paragraph.add_run("Aqui va a el footnote, pongo muchas lineas \n asdsdadasdasdasdadasdasasdadadsadasd\n sdffweewwolililioilioioilo \n")
+    run = paragraph.add_run("Disclaimer: \n This document contains confidential information and is intended only for the product development content review. Do not disseminate, distribute, or copy this document or any of its contents. You cannot use or forward the file without the Product Management team consent or Hewlett-Packard Development Company, L.P. permission. The information contained herein is subject to change without notice. HP shall not be liable for technical or editorial errors or omissions contained herein.")               
     run.font.size = Pt(8)
     run.bold = True
 
