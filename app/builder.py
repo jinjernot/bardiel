@@ -1,13 +1,20 @@
 import pandas as pd
 from app.word import *
 
-import pandas as pd
-
 def create_sheet(xlsx_file):
     """Builds a sheet"""
 
     # Read Excel
-    df = pd.read_excel(xlsx_file, sheet_name='Sheet1', skiprows=3)
+    df = pd.read_excel(xlsx_file, sheet_name='Sheet1')
+
+    # Find the index where the value in the first column is "Name"
+    name_index = df[df.iloc[:, 0] == "Name"].index[0]
+
+    # Set column names based on the row where "Name" is found
+    df.columns = df.iloc[name_index]
+
+    # Drop rows before the "Name" row
+    df = df.iloc[name_index+1:]
 
     # Remove formatting from text (e.g., italicized text)
     df = df.applymap(lambda x: x if not hasattr(x, 'font') else x.value)
@@ -15,9 +22,7 @@ def create_sheet(xlsx_file):
     # Convert all data to string format
     df = df.astype(str)
 
-    # Remove rows
-    df = df.drop(index=range(0, 30))
-
+    print(df.columns)
     # Remove rows where "Container Group" contains specific strings
     unwanted_strings = ["Messaging", "Facets", "Core Information", "Metadata"]
     df = df[~df["Container Group"].str.contains('|'.join(unwanted_strings), na=False)]
@@ -52,7 +57,7 @@ def create_sheet(xlsx_file):
     # Remove rows where "Series Value" is "nan|#Intentionally Left Blank#"
     df = df[~df["Series Value"].isin(["#Intentionally Left Blank#"])]
     df = df[~df["Series Value"].isin(["nan"])]
-    
+
     # Save Excel file
     excel_file = 'data.xlsx'
     df.to_excel(excel_file, index=False)
