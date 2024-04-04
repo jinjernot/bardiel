@@ -51,11 +51,16 @@ def create_sheet(xlsx_file):
     # Remove rows with "nan" values
     new_df = new_df[~new_df.isin(['nan']).any(axis=1)]
 
+    # Drop columns containing "Update" or "Status"
+    columns_to_drop = [col for col in new_df.columns if "Update" in col or "Status" in col]
+    new_df.drop(columns=columns_to_drop, inplace=True)
+
     # Keep only "Container Name" and "Series Value" columns
     df = df[["Container Name", "Series Value"]]
 
     # Remove rows where "Series Value" is "nan|#Intentionally Left Blank#"
     df = df[~df["Series Value"].isin(["#Intentionally Left Blank#"])]
+    df = df[~df["Series Value"].isin(["#BLANK#"])]
     df = df[~df["Series Value"].isin(["nan"])]
 
     # Save Excel file

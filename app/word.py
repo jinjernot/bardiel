@@ -2,6 +2,7 @@ from docx import Document
 from app.table import table_column_widths
 from docx.shared import Pt, Inches
 from docx.enum.text import WD_BREAK
+from app.footer import footer
 
 
 def excel_to_word(df, new_df, word_file):
@@ -28,7 +29,7 @@ def excel_to_word(df, new_df, word_file):
             # Set font size for each cell in the table
             for paragraph in cell.paragraphs:
                 for run in paragraph.runs:
-                    run.font.size = Pt(6)  # Set font size to 6 points
+                    run.font.size = Pt(18)  # Set font size to 6 points
             # Reduce spacing within cell
             cell.paragraphs[0].paragraph_format.space_before = Pt(0)
             cell.paragraphs[0].paragraph_format.space_after = Pt(0)
@@ -37,7 +38,7 @@ def excel_to_word(df, new_df, word_file):
     for cell in table.rows[0].cells:
         for paragraph in cell.paragraphs:
             for run in paragraph.runs:
-                run.font.size = Pt(6)  # Set font size to 6 points
+                run.font.size = Pt(8)  # Set font size to 6 points
                 run.font.bold = True
         # Add spacing to table header
         cell.paragraphs[0].paragraph_format.space_before = Pt(6)
@@ -118,12 +119,7 @@ def excel_to_word(df, new_df, word_file):
         section.top_margin = Inches(0.5)  # Set top margin to 0.5 inches
         section.bottom_margin = Inches(0.5)  # Set bottom margin to 0.5 inches
 
-    paragraph = doc.add_paragraph()
-    run = paragraph.add_run()
-    run.add_break(WD_BREAK.LINE)
-    run = paragraph.add_run("Disclaimer: \n This document contains confidential information and is intended only for the product development content review. Do not disseminate, distribute, or copy this document or any of its contents. You cannot use or forward the file without the Product Management team consent or Hewlett-Packard Development Company, L.P. permission. The information contained herein is subject to change without notice. HP shall not be liable for technical or editorial errors or omissions contained herein.")               
-    run.font.size = Pt(8)
-    run.bold = True
+    footer(doc)
 
     # Save the Word document
     doc.save(word_file)
