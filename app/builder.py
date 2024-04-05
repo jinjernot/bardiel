@@ -60,7 +60,7 @@ def create_sheet(xlsx_file):
 
     # Remove rows where "Series Value" is "nan|#Intentionally Left Blank#"
     df = df[~df["Series Value"].isin(["#Intentionally Left Blank#"])]
-    df = df[~df["Series Value"].isin(["#BLANK#"])]
+    df = df[~df["Series Value"].isin(["##BLANK##"])]
     df = df[~df["Series Value"].isin(["nan"])]
 
     # Save Excel file

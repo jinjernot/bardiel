@@ -1,9 +1,9 @@
-from docx import Document
 from app.table import table_column_widths
-from docx.shared import Pt, Inches
 from docx.enum.text import WD_BREAK
-from app.footer import footer
+from docx.shared import Pt, Inches
+from docx import Document
 
+from app.footer import add_footer
 
 def excel_to_word(df, new_df, word_file):
 
@@ -29,7 +29,7 @@ def excel_to_word(df, new_df, word_file):
             # Set font size for each cell in the table
             for paragraph in cell.paragraphs:
                 for run in paragraph.runs:
-                    run.font.size = Pt(18)  # Set font size to 6 points
+                    run.font.size = Pt(8)  # Set font size to 6 points
             # Reduce spacing within cell
             cell.paragraphs[0].paragraph_format.space_before = Pt(0)
             cell.paragraphs[0].paragraph_format.space_after = Pt(0)
@@ -38,34 +38,32 @@ def excel_to_word(df, new_df, word_file):
     for cell in table.rows[0].cells:
         for paragraph in cell.paragraphs:
             for run in paragraph.runs:
-                run.font.size = Pt(8)  # Set font size to 6 points
+                run.font.size = Pt(10)  # Set font size to 6 points
                 run.font.bold = True
         # Add spacing to table header
         cell.paragraphs[0].paragraph_format.space_before = Pt(6)
         cell.paragraphs[0].paragraph_format.space_after = Pt(6)
 
-
-    doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
     # Set table width to match entire page width
     table.autofit = False
     section = doc.sections[-1]
     table_width = section.page_width - section.left_margin - section.right_margin
     table.width = table_width
 
+    doc.add_paragraph()
+
     paragraph = doc.add_paragraph()
     run = paragraph.add_run("SKUs")
     run.font.size = Pt(12)
     run.bold = True
 
-    # Counter for tables added
-    tables_added = 0
     for i in range(1, new_df.shape[1]):
         # Add a paragraph break between tables
         #doc.add_paragraph()
 
         # Add a new table for the current column
         table = doc.add_table(rows=new_df.shape[0] + 1, cols=2,  style='Table Grid')
-        table_column_widths(table, (Inches(1.5), Inches(6),))
+        table_column_widths(table, (Inches(2), Inches(5.5),))
 
         # Populate the table with the values from the first and current column
         for j in range(new_df.shape[0]):
@@ -81,7 +79,7 @@ def excel_to_word(df, new_df, word_file):
             for cell in table.rows[j + 1].cells:
                 for paragraph in cell.paragraphs:
                     for run in paragraph.runs:
-                        run.font.size = Pt(6)  # Set font size to 6 points
+                        run.font.size = Pt(8)  # Set font size to 6 points
                         
                 # Reduce spacing within cell
                 cell.paragraphs[0].paragraph_format.space_before = Pt(0)
@@ -91,7 +89,7 @@ def excel_to_word(df, new_df, word_file):
         for cell in table.rows[0].cells:
             for paragraph in cell.paragraphs:
                 for run in paragraph.runs:
-                    run.font.size = Pt(8)  # Set font size to 6 points
+                    run.font.size = Pt(10)  # Set font size to 6 points
                     run.font.bold = True
             # Add spacing to table header
             cell.paragraphs[0].paragraph_format.space_before = Pt(6)
@@ -101,15 +99,8 @@ def excel_to_word(df, new_df, word_file):
         table.autofit = False
         table.width = table_width
 
-        # Increment tables_added counter
-        tables_added += 1
-
         # Insert a line break after each table
         doc.add_paragraph()
-
-        # Insert a page break after every third table
-        if tables_added % 4 == 0:
-            doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
 
     # Set margins
     sections = doc.sections
@@ -119,7 +110,7 @@ def excel_to_word(df, new_df, word_file):
         section.top_margin = Inches(0.5)  # Set top margin to 0.5 inches
         section.bottom_margin = Inches(0.5)  # Set bottom margin to 0.5 inches
 
-    footer(doc)
+    add_footer(doc)
 
     # Save the Word document
     doc.save(word_file)
