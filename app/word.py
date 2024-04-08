@@ -1,5 +1,4 @@
 from app.table import table_column_widths
-from docx.enum.text import WD_BREAK
 from docx.shared import Pt, Inches
 from docx import Document
 

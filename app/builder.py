@@ -59,8 +59,8 @@ def create_sheet(xlsx_file):
     df = df[["Container Name", "Series Value"]]
 
     # Remove rows where "Series Value" is "nan|#Intentionally Left Blank#"
-    df = df[~df["Series Value"].isin(["#Intentionally Left Blank#"])]
-    df = df[~df["Series Value"].isin(["##BLANK##"])]
+    #df = df[~df["Series Value"].isin(["#Intentionally Left Blank#"])]
+    #df = df[~df["Series Value"].isin(["##BLANK##"])]
     df = df[~df["Series Value"].isin(["nan"])]
 
     # Save Excel file
