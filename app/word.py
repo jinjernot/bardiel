@@ -10,7 +10,7 @@ def excel_to_word(df, new_df, word_file):
     doc = Document()
 
     paragraph = doc.add_paragraph()
-    run = paragraph.add_run("Series")
+    run = paragraph.add_run("Series Values")
     run.font.size = Pt(12)
     run.bold = True
 
@@ -52,7 +52,7 @@ def excel_to_word(df, new_df, word_file):
     doc.add_paragraph()
 
     paragraph = doc.add_paragraph()
-    run = paragraph.add_run("SKUs")
+    run = paragraph.add_run("SKU Values")
     run.font.size = Pt(12)
     run.bold = True
 
