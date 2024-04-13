@@ -7,7 +7,7 @@ from app.footer import add_footer
 def excel_to_word(df, new_df, word_file):
 
     # Create a Word document
-    doc = Document()
+    doc = Document("template.docx")
 
     paragraph = doc.add_paragraph()
     run = paragraph.add_run("Series Values")
@@ -112,5 +112,4 @@ def excel_to_word(df, new_df, word_file):
     add_footer(doc)
 
     # Save the Word document
-    doc.save(word_file)
-
+    doc.save("template_new.docx")
