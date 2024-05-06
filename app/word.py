@@ -1,10 +1,13 @@
 from app.table import table_column_widths
 from docx.shared import Pt, Inches
+from docx2pdf import convert
 from docx import Document
+import os
+
 
 from app.footer import add_footer
 
-def excel_to_word(df, new_df, word_file):
+def excel_to_word(df, new_df, xlsx_file):
 
     # Create a Word document
     doc = Document("template.docx")
@@ -111,5 +114,13 @@ def excel_to_word(df, new_df, word_file):
 
     add_footer(doc)
 
-    # Save the Word document
-    doc.save("template_new.docx")
+    # Extract filename without extension
+    excel_filename = os.path.splitext(xlsx_file)[0]
+
+    # Save Word file with the same name as the Excel file
+    word_filename = excel_filename + '_output.docx'
+    doc.save(word_filename)
+
+    # Convert Word to PDF
+    pdf_filename = excel_filename + '_output.pdf'
+    convert(word_filename, pdf_filename)

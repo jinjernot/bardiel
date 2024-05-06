@@ -64,9 +64,9 @@ def create_sheet(xlsx_file):
     df = df[~df["Series Value"].isin(["nan"])]
 
     # Save Excel file
-    excel_file = 'data.xlsx'
-    df.to_excel(excel_file, index=False)
-    new_df.to_excel("skus.xlsx", index=False)
+    #excel_file = 'data.xlsx'
+    #df.to_excel(excel_file, index=False)
+    #new_df.to_excel("skus.xlsx", index=False)
     # Convert Excel to Word
-    word_file = 'data.docx'
-    excel_to_word(df, new_df, word_file)
+    #word_file = 'data.docx'
+    excel_to_word(df, new_df, xlsx_file)
