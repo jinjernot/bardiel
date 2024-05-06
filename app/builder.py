@@ -7,6 +7,9 @@ def create_sheet(xlsx_file):
     # Read Excel
     df = pd.read_excel(xlsx_file, sheet_name='Sheet1')
 
+    # Extract the header value from the DataFrame
+    header_value = df.columns[1]  
+    
     # Find the index where the value in the first column is "Name"
     name_index = df[df.iloc[:, 0] == "Name"].index[0]
 
@@ -69,4 +72,4 @@ def create_sheet(xlsx_file):
     #new_df.to_excel("skus.xlsx", index=False)
     # Convert Excel to Word
     #word_file = 'data.docx'
-    excel_to_word(df, new_df, xlsx_file)
+    excel_to_word(df, new_df, xlsx_file, header_value)

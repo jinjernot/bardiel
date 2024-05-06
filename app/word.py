@@ -7,10 +7,18 @@ import os
 
 from app.footer import add_footer
 
-def excel_to_word(df, new_df, xlsx_file):
+def excel_to_word(df, new_df, xlsx_file, header_value):
 
     # Create a Word document
     doc = Document("template.docx")
+
+    # Add header with the extracted value
+    section = doc.sections[0]  # Get the first section (assuming only one section)
+    header = section.header
+    header_paragraph = header.paragraphs[0] if header.paragraphs else header.add_paragraph()
+    header_run = header_paragraph.add_run(header_value)
+    header_run.bold = True  # Make the text bold
+    header_run.font.size = Pt(16)  # Set the font size to 16pt
 
     paragraph = doc.add_paragraph()
     run = paragraph.add_run("Series Values")
